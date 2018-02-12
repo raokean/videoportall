@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Post;
+use App\Tag;
+use App\Category;
+
+class HomeController extends Controller
+{
+    public function index()
+    {
+        $posts = Post::paginate(2);
+        return view('page.index', compact('posts'));
+    }
+
+    public function single($slug)
+    {
+        $post = Post::where('slug', $slug)->firstOrFail();
+        return view('page.single', compact('post'));
+    }
+
+    public function tag($slug)
+    {
+        $tag = Tag::where('slug', $slug)->firstOrFail();
+        $posts = $tag->posts()->paginate(2);
+        return view('page.list', compact('posts'));
+    }
+
+    public function category($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        $posts = $category->posts()->paginate(2);
+        return view('page.list', compact('posts'));
+    }
+
+}
